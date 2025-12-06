@@ -88,6 +88,13 @@ export default function Home() {
                     Due: {new Date(todo.dueDate).toLocaleDateString()}
                   </span>
                 )}
+                {todo.imageUrl && (
+                  <img
+                    src={todo.imageUrl}
+                    alt={todo.title}
+                    className="mt-2 w-full h-32 object-cover rounded-lg"
+                  />
+                )}
               </div>
               <button
                 onClick={() => handleDeleteTodo(todo.id)}

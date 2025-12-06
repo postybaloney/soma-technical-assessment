@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [newTodo, setNewTodo] = useState('');
-  const [todos, setTodos] = useState([]);
+  const [dueDate, setDueDate] = useState(''); // State for due date
+  const [todos, setTodos] = useState<Todo[]>([]); // Specify Todo type
 
   useEffect(() => {
     fetchTodos();
@@ -13,7 +14,7 @@ export default function Home() {
   const fetchTodos = async () => {
     try {
       const res = await fetch('/api/todos');
-      const data = await res.json();
+      const data: Todo[] = await res.json(); // Specify Todo type
       setTodos(data);
     } catch (error) {
       console.error('Failed to fetch todos:', error);
@@ -26,16 +27,17 @@ export default function Home() {
       await fetch('/api/todos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: newTodo }),
+        body: JSON.stringify({ title: newTodo, dueDate }), // Include dueDate in request
       });
       setNewTodo('');
+      setDueDate(''); // Reset due date
       fetchTodos();
     } catch (error) {
       console.error('Failed to add todo:', error);
     }
   };
 
-  const handleDeleteTodo = async (id:any) => {
+  const handleDeleteTodo = async (id: number) => {
     try {
       await fetch(`/api/todos/${id}`, {
         method: 'DELETE',
@@ -57,9 +59,13 @@ export default function Home() {
             placeholder="Add a new todo"
             value={newTodo}
             onChange={(e) => setNewTodo(e.target.value)}
-          
           />
-          <input type="date" />
+          <input
+            type="date"
+            className="p-3 text-gray-700"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+          />
           <button
             onClick={handleAddTodo}
             className="bg-white text-indigo-600 p-3 rounded-r-full hover:bg-gray-100 transition duration-300"
@@ -68,17 +74,25 @@ export default function Home() {
           </button>
         </div>
         <ul>
-          {todos.map((todo:Todo) => (
+          {todos.map((todo) => (
             <li
               key={todo.id}
-              className="flex justify-between items-center bg-white bg-opacity-90 p-4 mb-4 rounded-lg shadow-lg"
+              className={`flex justify-between items-center bg-white bg-opacity-90 p-4 mb-4 rounded-lg shadow-lg ${
+                todo.dueDate && new Date(todo.dueDate) < new Date() ? 'text-red-500' : ''
+              }`}
             >
-              <span className="text-gray-800">{todo.title}</span>
+              <div>
+                <span className="text-gray-800 block">{todo.title}</span>
+                {todo.dueDate && (
+                  <span className="text-sm block">
+                    Due: {new Date(todo.dueDate).toLocaleDateString()}
+                  </span>
+                )}
+              </div>
               <button
                 onClick={() => handleDeleteTodo(todo.id)}
                 className="text-red-500 hover:text-red-700 transition duration-300"
               >
-                {/* Delete Icon */}
                 <svg
                   className="w-6 h-6"
                   fill="none"

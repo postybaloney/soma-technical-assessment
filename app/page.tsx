@@ -96,16 +96,12 @@ export default function Home() {
               className="flex justify-between items-center p-2 border-b last:border-b-0"
             >
               <div>
-                <h3 className="font-bold text-lg">{todo.title}</h3>
-                <p
-                  className={
-                    new Date(todo.dueDate) < new Date()
-                      ? "text-red-500"
-                      : "text-gray-700"
-                  }
-                >
-                  Due: {new Date(todo.dueDate).toLocaleDateString()}
-                </p>
+                <span className="text-gray-800 block">{todo.title}</span>
+                {todo.dueDate && (
+                  <span className="text-sm block">
+                    Due: {new Date(todo.dueDate).toLocaleDateString()}
+                  </span>
+                )}
               </div>
               <button
                 onClick={() => handleDeleteTodo(todo.id)}

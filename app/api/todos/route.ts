@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { Todo } from '@prisma/client';
 
+<<<<<<< HEAD
 const PEXELS_API_KEY = 'zMZX5MBHpdATHJe9pvNS4fKdiC8ESkf0600eZbqWVkgpaSbfUZ2VgXOa';
 const PEXELS_API_URL = 'https://api.pexels.com/v1/search';
 
@@ -27,6 +28,9 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const includeCriticalPath = url.searchParams.get('criticalPath') === 'true';
 
+=======
+export async function GET() {
+>>>>>>> parent of 2878052 (Completed Part 2)
   try {
     const todos = await prisma.todo.findMany({
       include: {
@@ -104,6 +108,7 @@ export async function POST(request: Request) {
     if (!title || title.trim() === '') {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 });
     }
+<<<<<<< HEAD
 
     // Validate circular dependencies
     const todos: Todo[] = await prisma.todo.findMany({
@@ -127,6 +132,12 @@ export async function POST(request: Request) {
       },
       include: {
         dependencies: true, // Include dependencies in the response
+=======
+    const todo = await prisma.todo.create({
+      data: {
+        title,
+        dueDate: dueDate ? new Date(dueDate) : null, // Parse dueDate if provided
+>>>>>>> parent of 2878052 (Completed Part 2)
       },
     });
     return NextResponse.json(todo, { status: 201 });

@@ -46,10 +46,46 @@ Implement a task dependency system that allows tasks to depend on other tasks. T
 4. Calculate the earliest possible start date for each task based on its dependencies
 5. Visualize the dependency graph
 
+### Submission
+The solution has been implemented and tested. The repository is ready for review.
+
 ## Submission:
 
 1. Add a new "Solution" section to this README with a description and screenshot or recording of your solution. 
 2. Push your changes to a public GitHub repository.
 3. Submit a link to your repository in the application form.
+
+## Solution
+
+### Part 1: Due Dates
+- Users can set a due date when creating a task.
+- The due date is displayed in the task list.
+- Overdue tasks are highlighted in red.
+
+### Part 2: Image Generation
+- When a task is created, the app fetches a relevant image from the Pexels API based on the task title.
+- The image is displayed alongside the task in the task list.
+
+### Part 3: Task Dependencies
+- Users can specify dependencies when creating a task.
+- Dependencies are displayed in the task list.
+- The system prevents circular dependencies and calculates the critical path.
+
+### Screenshots
+![Task List with Due Dates and Images](path/to/screenshot1.png)
+![Task Dependencies Visualization](path/to/screenshot2.png)
+
+## How to Use Dependencies
+
+### Selecting Dependencies
+1. Navigate to the task creation or editing interface.
+2. Use the multi-select dropdown to choose one or more tasks as dependencies for the current task.
+3. Ensure that the selected dependencies do not create a circular dependency.
+
+### Using the Dependency Graph
+- Each task is represented as a node in the graph.
+- Arrows indicate dependencies between tasks.
+- Hover over a node to view additional details about the task.
+- Click the delete button on a node to remove the task from the graph.
 
 Thanks for your time and effort. We'll be in touch soon!

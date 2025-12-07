@@ -8,9 +8,7 @@ datasource db {
 }
 
 model Todo {
-  id          Int      @id @default(autoincrement())
-  title       String
-  createdAt   DateTime @default(now())
-  dueDate     DateTime  // Required due date for the task
-  imageUrl    String    // Required image URL for the task
+  id        Int      @id @default(autoincrement())
+  title     String
+  createdAt DateTime  @default(now())
 }

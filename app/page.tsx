@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [newTodo, setNewTodo] = useState('');
-  const [dueDate, setDueDate] = useState(''); // State for due date
-  const [todos, setTodos] = useState<Todo[]>([]); // Specify Todo type
+  const [todos, setTodos] = useState([]);
 
   useEffect(() => {
     fetchTodos();
@@ -13,9 +12,9 @@ export default function Home() {
 
   const fetchTodos = async () => {
     try {
-      const res = await fetch('/api/todos?criticalPath=true');
-      const data: { todos: Todo[]; criticalPath: number[]; earliestStartDates: Record<number, string> } = await res.json();
-      setTodos(data.todos);
+      const res = await fetch('/api/todos');
+      const data = await res.json();
+      setTodos(data);
     } catch (error) {
       console.error('Failed to fetch todos:', error);
     }
@@ -27,17 +26,16 @@ export default function Home() {
       await fetch('/api/todos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: newTodo, dueDate }), // Removed dependencyIds
+        body: JSON.stringify({ title: newTodo }),
       });
       setNewTodo('');
-      setDueDate('');
-      fetchTodos(); // Ensure the list is refreshed after adding a new item
+      fetchTodos();
     } catch (error) {
       console.error('Failed to add todo:', error);
     }
   };
 
-  const handleDeleteTodo = async (id: number) => {
+  const handleDeleteTodo = async (id:any) => {
     try {
       await fetch(`/api/todos/${id}`, {
         method: 'DELETE',
@@ -59,13 +57,9 @@ export default function Home() {
             placeholder="Add a new todo"
             value={newTodo}
             onChange={(e) => setNewTodo(e.target.value)}
+          
           />
-          <input
-            type="date"
-            className="p-3 text-gray-700"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-          />
+          <input type="date" />
           <button
             onClick={handleAddTodo}
             className="bg-white text-indigo-600 p-3 rounded-r-full hover:bg-gray-100 transition duration-300"
@@ -73,31 +67,31 @@ export default function Home() {
             Add
           </button>
         </div>
-        <ul className="bg-white rounded-lg shadow-md p-4">
-          {(todos || []).map((todo) => (
+        <ul>
+          {todos.map((todo:Todo) => (
             <li
               key={todo.id}
-              className="flex justify-between items-center p-2 border-b last:border-b-0"
+              className="flex justify-between items-center bg-white bg-opacity-90 p-4 mb-4 rounded-lg shadow-lg"
             >
-              <div>
-                <span className="text-gray-800 block">{todo.title}</span>
-                {todo.dueDate && (
-                  <span
-                    className={
-                      new Date(todo.dueDate) < new Date()
-                        ? "text-red-500"
-                        : "text-gray-700"
-                    }
-                  >
-                    Due: {new Date(todo.dueDate).toLocaleDateString()}
-                  </span>
-                )}
-              </div>
+              <span className="text-gray-800">{todo.title}</span>
               <button
                 onClick={() => handleDeleteTodo(todo.id)}
                 className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
               >
-                Delete
+                {/* Delete Icon */}
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
               </button>
             </li>
           ))}

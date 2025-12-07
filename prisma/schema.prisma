@@ -8,7 +8,19 @@ datasource db {
 }
 
 model Todo {
-  id        Int      @id @default(autoincrement())
-  title     String
-  createdAt DateTime  @default(now())
+  id          Int          @id @default(autoincrement())
+  title       String
+  createdAt   DateTime     @default(now())
+  dueDate     DateTime?    // Optional due date for the task
+  imageUrl    String?      // Optional image URL for the task
+  dependenciesFrom Dependency[] @relation("FromTask") // Relation to dependencies where this task is the source
+  dependenciesTo   Dependency[] @relation("ToTask")   // Relation to dependencies where this task is the target
+}
+
+model Dependency {
+  id         Int   @id @default(autoincrement())
+  fromTask   Todo  @relation("FromTask", fields: [fromTaskId], references: [id])
+  fromTaskId Int
+  toTask     Todo  @relation("ToTask", fields: [toTaskId], references: [id])
+  toTaskId   Int
 }

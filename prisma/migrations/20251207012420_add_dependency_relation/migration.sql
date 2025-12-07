@@ -1,0 +1,8 @@
+-- CreateTable
+CREATE TABLE "Dependency" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "fromTaskId" INTEGER NOT NULL,
+    "toTaskId" INTEGER NOT NULL,
+    CONSTRAINT "Dependency_fromTaskId_fkey" FOREIGN KEY ("fromTaskId") REFERENCES "Todo" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "Dependency_toTaskId_fkey" FOREIGN KEY ("toTaskId") REFERENCES "Todo" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);

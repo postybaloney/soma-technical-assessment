@@ -1,13 +1,11 @@
 "use client"
 import { Todo } from '@prisma/client';
 import { useState, useEffect } from 'react';
-import Select from 'react-select';
 
 export default function Home() {
   const [newTodo, setNewTodo] = useState('');
   const [dueDate, setDueDate] = useState(''); // State for due date
   const [todos, setTodos] = useState<Todo[]>([]); // Specify Todo type
-  const [dependencies, setDependencies] = useState<number[]>([]); // State for dependencies
 
   useEffect(() => {
     fetchTodos();
@@ -29,12 +27,11 @@ export default function Home() {
       await fetch('/api/todos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: newTodo, dueDate, dependencyIds: dependencies }), // Include dependencies
+        body: JSON.stringify({ title: newTodo, dueDate }), // Removed dependencyIds
       });
       setNewTodo('');
       setDueDate('');
-      setDependencies([]); // Reset dependencies
-      fetchTodos();
+      fetchTodos(); // Ensure the list is refreshed after adding a new item
     } catch (error) {
       console.error('Failed to add todo:', error);
     }
@@ -50,11 +47,6 @@ export default function Home() {
       console.error('Failed to delete todo:', error);
     }
   };
-
-  const dependencyOptions = (todos || []).map((todo: Todo) => ({
-    value: todo.id,
-    label: todo.title,
-  }));
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-500 to-red-500 flex flex-col items-center p-4">
@@ -74,14 +66,6 @@ export default function Home() {
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
           />
-          <Select
-            isMulti
-            options={dependencyOptions}
-            onChange={(selectedOptions) =>
-              setDependencies(selectedOptions.map((option) => option.value))
-            }
-            className="w-full"
-          />
           <button
             onClick={handleAddTodo}
             className="bg-white text-indigo-600 p-3 rounded-r-full hover:bg-gray-100 transition duration-300"
@@ -98,7 +82,13 @@ export default function Home() {
               <div>
                 <span className="text-gray-800 block">{todo.title}</span>
                 {todo.dueDate && (
-                  <span className="text-sm block">
+                  <span
+                    className={
+                      new Date(todo.dueDate) < new Date()
+                        ? "text-red-500"
+                        : "text-gray-700"
+                    }
+                  >
                     Due: {new Date(todo.dueDate).toLocaleDateString()}
                   </span>
                 )}

@@ -8,20 +8,9 @@ datasource db {
 }
 
 model Todo {
-<<<<<<< HEAD
   id          Int      @id @default(autoincrement())
   title       String
   createdAt   DateTime @default(now())
   dueDate     DateTime  // Required due date for the task
   imageUrl    String    // Required image URL for the task
-
-  // Self-referencing relationship for task dependencies
-  dependencies Todo[]   @relation("TaskDependencies") // Required dependencies
-  dependents   Todo[]   @relation("TaskDependencies")
-=======
-  id        Int      @id @default(autoincrement())
-  title     String
-  createdAt DateTime  @default(now())
-  dueDate   DateTime? // Optional due date for the task
->>>>>>> parent of 2878052 (Completed Part 2)
 }
